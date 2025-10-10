@@ -11,10 +11,5 @@ export const MODEL_TYPES = {
   RATINGS: "ratings",
   NOTES: "notes",
   USER: "user",
-  USER_ROLES: "userRoles",
-  NOTES: "notes"
-}
-
-export const ENTERTAINMENT_TYPES = {
-
+  USER_ROLES: "userRoles"
 }
