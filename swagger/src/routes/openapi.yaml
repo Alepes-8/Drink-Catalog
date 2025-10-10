@@ -1,18 +1,18 @@
 openapi: 3.0.3
 info:
-  title: Entertainment Catalog
-  description: Api in which returns the available movies and shows from different Entertainment services such as netflix.
+  title: Drink Catalog
+  description: Api in which returns drink recipies and the availble rating that is privatly given for the Drink services.
   version: 1.0.0
 
 servers:
-  - url: http://localhost:5000/entertainment
-    description: API service for Entertainment catalog
+  - url: http://localhost:5001/drink
+    description: API service for Drink catalog
 
 paths:
   /health:
     get:
       summary: Get the health status of the api
-      tags: [Entertainment]
+      tags: [Drink]
       responses: 
         '200': 
           description: The api is running and can be called

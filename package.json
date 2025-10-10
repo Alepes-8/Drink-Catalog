@@ -1,7 +1,7 @@
 {
-  "name": "entertainment-catalog",
+  "name": "drink-catalog",
   "version": "1.0.0",
-  "description": "An API to catalog movies a user is watching and track titles available across multiple streaming services.",
+  "description": "An API to catalog and rate different drinks as well as allow the user to set notes to drinks in order to later improvments",
   "main": "index.js",
   "type": "module",
   "directories": {

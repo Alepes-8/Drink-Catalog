@@ -43,7 +43,7 @@ This configuration is currently implemented in the `app.js` file.
 
 ```js
     // ----------------- Setup Swagger UI -----------------
-    // This runs on http://localhost:5000/api-docs
+    // This runs on http://localhost:5001/api-docs
     import swaggerUi from "swagger-ui-express";
     import YAML from "yamljs";
 
@@ -52,7 +52,7 @@ This configuration is currently implemented in the `app.js` file.
 ```
 - It is important to set the correct file path in `YAML.load()` to match the location of your `openapi.yaml` documentation file. For example, if the file is stored inside a `swagger` or `docs` folder, make sure the relative path points there accurately.
 
-- The `/api-docs` route defines where the Swagger UI documentation can be accessed (e.g., [http://localhost:5000/api-docs](http://localhost:5000/api-docs)). You can rename this route to something else—such as `/docs` or `/swagger`—depending on your project’s structure or naming preferences.
+- The `/api-docs` route defines where the Swagger UI documentation can be accessed (e.g., [http://localhost:5001/api-docs](http://localhost:5001/api-docs)). You can rename this route to something else—such as `/docs` or `/swagger`—depending on your project’s structure or naming preferences.
 
 ### 4. Create the `openapi.yaml` file
 

@@ -9,14 +9,14 @@ services:
     volumes:
       - mongo-data:/data/db
 
-  entertainment_api:
-    container_name: entertainment_api
+  drink_api:
+    container_name: drink_api
     build:
       context: .
       dockerfile: src/Dockerfile
-    image: ghcr.io/alepes-8/entertainment_api:latest # The image name to be used when pushing to GHCR
+    image: ghcr.io/alepes-8/drink_api:latest # The image name to be used when pushing to GHCR
     ports:
-      - "5000:5000"
+      - "5001:5001"
     environment:
       - port=${PORT}
       - MONGO_URI=${MONGO_URI}

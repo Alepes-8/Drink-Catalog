@@ -1,7 +1,7 @@
 import app from "../../src/app.js"
 import request from "supertest";
 
-describe("Entertainment Integration Tests", () => {
+describe("Drink Integration Tests", () => {
 
     it("should respond on root route", async () => {
         //arrange
@@ -9,12 +9,12 @@ describe("Entertainment Integration Tests", () => {
 
         //assert
         expect(res.statusCode).toBe(200);
-        expect(res.text).toMatch(/Entertainment API is running.../i); // or whatever your root returns
+        expect(res.text).toMatch(/Drink API is running.../i); // or whatever your root returns
     });
 
-    it("should have /entertainment route mounted", async () => {
+    it("should have /drink route mounted", async () => {
         //arrange
-        const res = await request(app).get("/entertainment/health");
+        const res = await request(app).get("/drink/health");
 
         //assert
         expect(res.statusCode).toBe(200);

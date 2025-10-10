@@ -42,18 +42,18 @@ jobs:
           done
 
       # Setup the entertainment_api
-      - name: Install entertainment_api dependencies
+      - name: Install drink_api dependencies
         working-directory: ./src
         run: npm install
       
-      - name: Start the entertainment_api
+      - name: Start the drink_api
         working-directory: ./src
         env: 
-          MONGO_URI: mongodb://localhost:27017/entertainment
+          MONGO_URI: mongodb://localhost:27017/drink
         run: |
-          PORT=5000 node app.js > server.log 2>&1 &
+          PORT=5001 node app.js > server.log 2>&1 &
 
-      - name: Debug Entertainment Catalog API startup
+      - name: Debug Drink Catalog API startup
         working-directory: ./src
         run: |
           sleep 5
@@ -67,13 +67,13 @@ jobs:
       - name: Wait for Entertainment API
         working-directory: ./src
         run: |
-          npx wait-on --timeout 60000 http://localhost:5000/entertainment/health
+          npx wait-on --timeout 60000 http://localhost:5001/drink/health
 
-      - name: Run Entertainment postman API tests with Newman
+      - name: Run Drink postman API tests with Newman
         working-directory: .
         run: |
           npm install newman
-          npx newman run postman/Entertainment_basis.postman_collection.json
+          npx newman run postman/Drink_basis.postman_collection.json
 
 # Stop earlier containers as they are not needed for the following tests.
       - name: Clean up old containers
