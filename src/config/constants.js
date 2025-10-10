@@ -5,13 +5,16 @@ export const STATUS_CODES = {
 };
 
 export const MODEL_TYPES = {
-  GENRE: "Genre",
-  PLATFORM: "Platform",
-  ENTERTAINEMNT: "Entertainment",
-  AVAILABILITY: "Avalability"
+  DRINK: "drinkRecipes",
+  INGREDIENT_TYPES: "ingredientType",
+  INGREDIENTS: "ingredients",
+  RATINGS: "ratings",
+  NOTES: "notes",
+  USER: "user",
+  USER_ROLES: "userRoles",
+  NOTES: "notes"
 }
 
 export const ENTERTAINMENT_TYPES = {
-  MOVIE: "movie",
-  SERIES: "series"
+
 }
