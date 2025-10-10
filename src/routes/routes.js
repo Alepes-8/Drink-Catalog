@@ -17,9 +17,4 @@ router.get("/health", async(req, res) => {
  *      - Get data based on year
  */
 
-router.get("/:name", async(req, res) => {
-    const drink = await drinkRecipe.find({name: req.params.name}).populate(MODEL_TYPES.DRINK);
-    res.json(drink)
-})
-
 export default router;
