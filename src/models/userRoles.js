@@ -5,4 +5,4 @@ const userRolesSchema = new mongoose.Schema({
     name: {type: String, enum: ["admin", "normal"], default: "normal"},
 });
 
-export default mongoose.model(MODEL_TYPES.USER_ROLE, userRolesSchema);
+export default mongoose.model(MODEL_TYPES.USER_ROLES, userRolesSchema);

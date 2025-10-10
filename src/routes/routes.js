@@ -5,6 +5,7 @@ import ingredientType from "../models/ingredientTypes.js"
 import notes from "../models/notes.js"
 import ratings from "../models/ratings.js"
 import users from "../models/users.js"
+import userRoles from "../models/userRoles.js";
 
 import {STATUS_CODES, MODEL_TYPES} from '../config/constants.js';
 
