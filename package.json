@@ -1,0 +1,35 @@
+{
+  "name": "entertainment-catalog",
+  "version": "1.0.0",
+  "description": "An API to catalog movies a user is watching and track titles available across multiple streaming services.",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "start": "node src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "mockingoose": "^2.16.2",
+    "nodemon": "^3.1.10",
+    "sonarqube-scanner": "^4.3.2",
+    "supertest": "^6.3.3"
+  }
+}
