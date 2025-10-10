@@ -1,8 +1,12 @@
 import express from "express";
-import Entertainment from "../models/entertainment.js"
-import Avalability from "../models/avalability.js";
-import Platforms from "../models/platforms.js";
-import Genres from "../models/genres.js";
+import drinkRecipe from "../models/drinkRecipe.js";
+import ingredients from "../models/ingredients.js"
+import ingredientType from "../models/ingredientTypes.js"
+import notes from "../models/notes.js"
+import ratings from "../models/ratings.js"
+import users from "../models/users.js"
+import userRoles from "../models/userRoles.js";
+
 import {STATUS_CODES, MODEL_TYPES} from '../config/constants.js';
 
 const router = express.Router();
@@ -19,10 +23,5 @@ router.get("/health", async(req, res) => {
  *      - Get data based on title
  *      - Get data based on year
  */
-
-router.get("/:title", async(req, res) => {
-    const entertainment = await Entertainment.find({title: req.params.title}).populate(MODEL_TYPES.GENRE);
-    res.json(entertainment)
-})
 
 export default router;

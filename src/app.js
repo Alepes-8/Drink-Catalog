@@ -21,21 +21,21 @@ app.use(express.json());    //Without this, the body will be undefined
 
 
 // ----------------- Setup swagger ui -----------------
-// This runs on http://localhost:5000/api-docs
+// This runs on http://localhost:5001/api-docs
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const swaggerPath = path.resolve(__dirname, "../swagger/src/routes/openapi.yaml");
 const swaggerDocument = YAML.load(swaggerPath);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-console.log("📘 Swagger docs available at: http://localhost:5000/api-docs");
+console.log("📘 Swagger docs available at: http://localhost:5001/api-docs");
 
 // ----------------- Routes -----------------
 app.get("/", (req, res) => {
-  res.send("Entertainment API is running...");
+  res.send("Drink API is running...");
 });
 
-app.use("/entertainment", routes);
+app.use("/drink", routes);
 
 // ----------------- MongoDB Connection -----------------
 // Only connect to Mongo if not in test 
