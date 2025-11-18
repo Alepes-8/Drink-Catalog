@@ -6,10 +6,17 @@ import notes from "../models/notes.js"
 import ratings from "../models/ratings.js"
 import users from "../models/users.js"
 import userRoles from "../models/userRoles.js";
-
+import recipeController from "../controllers/recipeController.js";
 import {STATUS_CODES, MODEL_TYPES} from '../config/constants.js';
 
 const router = express.Router();
+router.get("/health", recipeController.healthCheck)
+router.get("/login", recipeController.login)
+router.get("/register", recipeController.register)
+router.get("/searchByName", recipeController.searchDrinksByName)
+router.get("/searchByIngredients", recipeController.searchDrinksByIngredients)
+router.get("/updateDrinkNote", recipeController.updateDrinkNote)
+router.get("/updateDrinkRating", recipeController.updateDrinkRating)
 
 router.get("/health", async(req, res) => {
     res.status(STATUS_CODES.SUCCESS).json({status: 'ok'})
