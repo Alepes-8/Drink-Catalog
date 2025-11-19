@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true, trim: true, lowercase: true},
     password: { type: String, required: true },
-    role: {type: mongoose.Types.ObjectId, ref: MODEL_TYPES.USER_ROLES, required: true}
+    role: {type: mongoose.Types.ObjectId, ref: MODEL_TYPES.USER_ROLES, required: true, default: null}
 });
 
 // Hash password before saving

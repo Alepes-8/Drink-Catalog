@@ -1,34 +1,19 @@
 import express from "express";
-import drinkRecipe from "../models/drinkRecipe.js";
-import ingredients from "../models/ingredients.js"
-import ingredientType from "../models/ingredientTypes.js"
-import notes from "../models/notes.js"
-import ratings from "../models/ratings.js"
-import users from "../models/users.js"
-import userRoles from "../models/userRoles.js";
 import recipeController from "../controllers/recipeController.js";
-import {STATUS_CODES, MODEL_TYPES} from '../config/constants.js';
+import authenticationController from "../controllers/authenticationController.js";
+import auth from "../authentication/authMiddleware.js"
+import requiredRole from "../authentication/authRole.js";
 
 const router = express.Router();
+
+router.get("/login", authenticationController.login)
+router.post("/register", authenticationController.register)
+router.delete("/deleteUser", auth, requiredRole("admin"), authenticationController.deleteUser)
+
 router.get("/health", recipeController.healthCheck)
-router.get("/login", recipeController.login)
-router.get("/register", recipeController.register)
-router.get("/searchByName", recipeController.searchDrinksByName)
-router.get("/searchByIngredients", recipeController.searchDrinksByIngredients)
-router.get("/updateDrinkNote", recipeController.updateDrinkNote)
-router.get("/updateDrinkRating", recipeController.updateDrinkRating)
-
-router.get("/health", async(req, res) => {
-    res.status(STATUS_CODES.SUCCESS).json({status: 'ok'})
-})
-
-/** TODO
- * Create a get function in which it handles different inputs values each time
- *      - Get data based on country
- *      - Get data based on genre
- *      - get data based on platform
- *      - Get data based on title
- *      - Get data based on year
- */
+router.get("/searchByName", auth, recipeController.searchDrinksByName)
+router.get("/searchByIngredients", auth, recipeController.searchDrinksByIngredients)
+router.put("/updateDrinkNote", auth, recipeController.updateDrinkNote)
+router.put("/updateDrinkRating", auth, recipeController.updateDrinkRating)
 
 export default router;
