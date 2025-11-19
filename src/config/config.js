@@ -6,7 +6,7 @@ export const MONGO_URI =
   !process.env.MONGO_URI ||
   process.env.MONGO_URI.includes("localhost") ||
   process.env.MONGO_URI.includes("127.0.0.1")
-    ? "mongodb://mongo:27017/drink"
+    ? "mongodb://127.0.0.1:27017/drink"
     : process.env.MONGO_URI;
 
 export const PORT = process.env.PORT || 5001;

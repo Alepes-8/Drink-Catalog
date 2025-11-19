@@ -1,14 +1,9 @@
 
-import {STATUS_CODES} from '../config/constants.js';
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/users.js";
 import UserRoles from '../models/userRoles.js';
-import { STATUS_CODES } from '../config/constants.js';
-
-export const healthCheck = async (req, res) => {
-    res.status(STATUS_CODES.SUCCESS).json({status: 'ok'})
-}
+import {STATUS_CODES} from '../config/constants.js';
 
 export const register = async (req, res) => {
     try{

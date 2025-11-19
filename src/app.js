@@ -40,6 +40,7 @@ app.use("/drink", routes);
 // ----------------- MongoDB Connection -----------------
 // Only connect to Mongo if not in test 
 if (process.env.NODE_ENV !== "test") {
+  console.log("🔌 Connecting to MongoDB... ---- " , MONGO_URI);
   if (!MONGO_URI) {
     console.error("❌ MONGO_URI is not defined");
     process.exit(1);
@@ -50,7 +51,6 @@ if (process.env.NODE_ENV !== "test") {
     .then(() => console.log("✅ MongoDB connected"))
     .catch(err => console.error("❌ MongoDB connection error:", err));
 
-  // 👇 This was missing
   app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} \n Address ${MONGO_URI}`));
 }
 // ----------------- Export app for testing -----------------
