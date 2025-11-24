@@ -8,14 +8,14 @@ import {STATUS_CODES} from '../config/constants.js';
 export const register = async (req, res) => {
     try{
         const userData = {}
-        if(req.body.email) userData.email = req.body.email.toString().toLowerCase();
-        if(req.body.password) userData.password = req.body.password.toString();
+        if(req.body.email) userData.email = req.body.email?.toString().toLowerCase();
+        if(req.body.password) userData.password = req.body.password?.toString();
         
-        const user = new User(userData)
-        await user.save();
+        await User.create(userData);    
+    
         res.status(STATUS_CODES.CREATION_SUCCESS).json({ message: "User registered"});
     }catch(err){
-        res.status(STATUS_CODES.SERVER_ERROR).json({error: err});
+        res.status(STATUS_CODES.SERVER_ERROR).json({error: err.message});
     }
 };
 
@@ -29,7 +29,6 @@ export const login = async (req, res) => {
         const user = await User.findOne({email: userInput.email});
         const userRole = await UserRoles.findById(user.role);
             
-
         if(!user || !(await bcrypt.compare(userInput.password, user.password))){
            return res.status(STATUS_CODES.INVALID_INPUT).json({ error: "Invalid credentials" });
         };
