@@ -16,3 +16,9 @@ export const MODEL_TYPES = {
   USER: "user",
   USER_ROLES: "userRoles"
 }
+
+export const STATUS_MESSAGES = {
+  SUCCESS_NOTE_UPDATE: "Notes for the recipe has been updated",
+  SUCCESS_RATING_UPDATE: "Ratings for the recipe has been updated",
+}
+
