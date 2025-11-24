@@ -76,19 +76,20 @@ async function convertIngredientsIdToName(recipes) {
     return recipes;
 }
 
+// Get all information from the drink correlating to the user
 export const getDrinkInformation = async (req, res) => {
     // 1 get the req id for the drink
     const drinkId = req.query.drinkId.toString();
     const returnValue = {}
 
     // 2 get the information from the drink, that includes the drink, ingredients, notes, and ratings
-    returnValue.drinkData = await DrinkRecipe.find({_id: drinkId});
+    returnValue.drinkData = await DrinkRecipe.find({_id: drinkId}).exec();
     drinkData = convertIngredientsIdToName(drinkData);
 
-    returnValue.notes = await Notes.findOne({$and: {drinkID: drinkId, userId: req.user.id}});
-    returnValue.userRating = await Ratings.findOne({$and: {drinkID: drinkId, userId: req.user.id}})
+    returnValue.notes = await Notes.findOne({$and: {drinkID: drinkId, userId: req.user.id}}).exec();
+    returnValue.userRating = await Ratings.findOne({$and: {drinkID: drinkId, userId: req.user.id}}).exec();
+    
     // 3 return the drink information
-
     res.status(STATUS_CODES.SUCCESS).json({returnValue})
 };
 
@@ -128,6 +129,7 @@ export default {
     healthCheck, 
     searchDrinksByName, 
     searchDrinksByIngredients, 
+    getDrinkInformation,
     updateDrinkNote, 
     updateDrinkRating
 };
