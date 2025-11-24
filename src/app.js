@@ -48,7 +48,13 @@ if (process.env.NODE_ENV !== "test") {
 
   mongoose
     .connect(MONGO_URI)
-    .then(() => console.log("✅ MongoDB connected"))
+    .then(async () =>{
+      console.log("✅ MongoDB connected")
+      
+      // Seed admin after connection
+      const { seedAdmin } = await import("./authentication/seedAdmin.js");
+      await seedAdmin();
+     })
     .catch(err => console.error("❌ MongoDB connection error:", err));
 
   app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} \n Address ${MONGO_URI}`));

@@ -22,14 +22,15 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try{
         const userInput = {}
-        if(req.body.email) userData.email = req.body.email.toString().toLowerCase();
-        if(req.body.password) userData.password = req.body.password.toString();
+        userInput.email = req.body.email?.toString().toLowerCase();
+        userInput.password = req.body.password?.toString().trim();
 
         // 1 find user and verify password
         const user = await User.findOne({email: userInput.email});
         const userRole = await UserRoles.findById(user.role);
-        
-        if(!user || !(await bcrypt.compare(password, user.password))){
+            
+
+        if(!user || !(await bcrypt.compare(userInput.password, user.password))){
            return res.status(STATUS_CODES.INVALID_INPUT).json({ error: "Invalid credentials" });
         };
 
@@ -44,10 +45,10 @@ export const login = async (req, res) => {
         );
         
         // 4. Send back token
-        res.json({token});
+        res.status(STATUS_CODES.SUCCESS).json({token});
 
     }catch(err){
-        res.status(STATUS_CODES.SERVER_ERROR).json({error: err})
+        res.status(STATUS_CODES.SERVER_ERROR).json({error: err.message})
     }
 };
 
@@ -60,8 +61,14 @@ export const deleteUser = async (req, res) => {
     }
 };
 
+export const updateUser = async (req, res) => {
+    //TODO
+    res.json({message: "Not implemented yet"});
+};
+
 export default { 
     login, 
     register, 
-    deleteUser
+    deleteUser,
+    updateUser
 };
