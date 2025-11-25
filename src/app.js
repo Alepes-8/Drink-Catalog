@@ -127,11 +127,10 @@ async function populateDatabase(){
     await DrinkRecipe.bulkWrite(drinkOps);
 
     DrinkRecipe.create({
-        name: "test",
-        ingredientNames: ["test1", "test2", "cheese"]
+        name: "test drink",
+        ingredientNames: ["test whisky", "test sockerlag", "test angostura bitters"]
     });
 };
-
 
 // ----------------- Export app for testing -----------------
 export default app

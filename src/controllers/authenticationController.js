@@ -27,11 +27,12 @@ export const login = async (req, res) => {
 
         // 1 find user and verify password
         const user = await User.findOne({email: userInput.email});
-        const userRole = await UserRoles.findById(user.role);
-            
+        
         if(!user || !(await bcrypt.compare(userInput.password, user.password))){
            return res.status(STATUS_CODES.INVALID_INPUT).json({ error: "Invalid credentials" });
         };
+
+        const userRole = await UserRoles.findById(user.role);
 
         // 2 create a JWT
         const token = jwt.sign(
@@ -63,8 +64,18 @@ export const deleteUser = async (req, res) => {
 
 export const deleteUserByID = async (req, res) => {
     try{
-        await User.findByIdAndDelete(req.params.id);
+        await User.findByIdAndDelete(req.body.id);
+
         res.status(STATUS_CODES.SUCCESS).json({message: "User deleted"})
+    } catch(err){
+        res.status(400).json({error: err.message})
+    }
+};
+
+export const getUserId = async (req, res) => {
+    try{
+        const user = await User.findOne({email: req.body.email.toLowerCase()});
+        res.status(STATUS_CODES.SUCCESS).json({usersEmail: user.email, usersId:user._id})
     } catch(err){
         res.status(400).json({error: err.message})
     }
@@ -80,5 +91,6 @@ export default {
     register, 
     deleteUser,
     updateUser,
-    deleteUserByID
+    deleteUserByID,
+    getUserId
 };

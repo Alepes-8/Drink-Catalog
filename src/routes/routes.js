@@ -17,5 +17,6 @@ router.get("/searchByIngredients", auth, recipeController.searchDrinksByIngredie
 router.get("/getDrinkById", auth, recipeController.getDrinkInformation)
 router.put("/updateDrinkNote", auth, recipeController.updateDrinkNote)
 router.put("/updateDrinkRating", auth, recipeController.updateDrinkRating)
+router.get("/getUserId", auth, requiredRole("admin"), authenticationController.getUserId)
 
 export default router;

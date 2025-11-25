@@ -2,7 +2,7 @@
 import {STATUS_CODES, STATUS_MESSAGES} from '../config/constants.js';
 import mongoose from 'mongoose';
 import DrinkRecipe from '../models/drinkRecipe.js';
-import ingredients from '../models/ingredients.js';
+import Ingredients from '../models/ingredients.js';
 import Notes from '../models/notes.js';
 import Ratings from '../models/ratings.js';
 
@@ -41,19 +41,29 @@ export const searchDrinksByName = async (req, res) => {
 export const searchDrinksByIngredients = async (req, res) => {
     try{
         // 1 get the input data from req.query and fix them for security
-        const ingredientsToSeach = req.body.ingredients; 
         const typeOfSearch = req.query.typeOfSearch         // If they want drinks that include the given ingredients or just those that include all of them
 
+        const uniqueIngredientNames = [
+            ...new Set(req.body.ingredients)
+        ];
+
         // 2 search the databbase based on the input ingredients
+        const ingredientIds = await Ingredients.find({
+            name: { $in: uniqueIngredientNames }
+        });
+        
+        const ingredientIdstests = await Ingredients.find();
+        const test = ingredientIdstests.map(item => [item._id, item.name])
+
         const filter = {};
         if(typeOfSearch && typeOfSearch === "includeAll"){
-            filter.ingredients = {$all: ingredientsToSeach}; // All ingredients must be present
+            filter.ingredients = {$all: ingredientIds}; // All ingredients must be present
 
         }else if(typeOfSearch && typeOfSearch === "exclude"){
-            filter.ingredients = {$not: ingredientsToSeach}; // None of the ingredients must be present
+            filter.ingredients = {$not: ingredientIds}; // None of the ingredients must be present
 
         }else{
-            filter.ingredients = {$in: ingredientsToSeach}; // At least one of the ingredients must be present
+            filter.ingredients = {$in: ingredientIds}; // At least one of the ingredients must be present
         };
 
         let result = await DrinkRecipe.find(filter)
@@ -78,8 +88,17 @@ export const getDrinkInformation = async (req, res) => {
         // 2 get the information from the drink, that includes the drink, ingredients, notes, and ratings
         returnValue.drinkData = await DrinkRecipe.find({_id: drinkId}).populate("ingredients").exec();
 
-        returnValue.notes = await Notes.findOne({$and: {drinkID: drinkId, userId: req.user.id}}).exec();
-        returnValue.userRating = await Ratings.findOne({$and: {drinkID: drinkId, userId: req.user.id}}).exec();
+        returnValue.notes = await Notes.findOne({    
+            $and: [
+                { drinkID: drinkId },
+                { userId: req.user.id }
+        ]}).exec();
+
+        returnValue.userRating = await Ratings.findOne({
+            $and: [
+                { drinkID: drinkId },
+                { userId: req.user.id }
+        ]}).exec();
         
         // 3 return the drink information
         res.status(STATUS_CODES.SUCCESS).json({returnValue})
@@ -92,15 +111,18 @@ export const updateDrinkNote = async (req, res) => {
     try{
         // 1 get the user id to know whoes note to update and get the recipe id for which recipe to update.
         const drinkId = req.query.drinkId.toString();
-        const notes = req.body.notes.toString().toLowerCase().lean();
-
+        const notes = req.body.notes.toString().toLowerCase();
         // 2 update the notes for the user to se on the drink
-        await Notes.findOneAndUpdate({$and: {drinkID: drinkId, userId: req.user.id}}, notes, {new: true});
+        await Notes.findOneAndUpdate({
+            $and: [
+                {drinkID: drinkId},
+                {userId: req.user.id}
+        ]}, notes, {new: true});
 
         // 3 return status
         res.status(STATUS_CODES.UPDATE_SUCCESS).json({message: STATUS_MESSAGES.SUCCESS_NOTE_UPDATE})
     }catch(err){
-        res.status(STATUS_CODES.SERVER_ERROR).json({error: err});
+        res.status(STATUS_CODES.SERVER_ERROR).json({error: err.message});
     };
 };
 
@@ -108,7 +130,7 @@ export const updateDrinkRating = async (req, res) => {
     try{
         // 1 get the user id to know whoes note to update and get the recipe id for which recipe to update.
         const drinkId = req.query.drinkId.toString();
-        const rating = req.body.rating.toNumber();
+        const rating = Number(req.body.rating);
 
         if(rating <1 || rating > 10){
             res.status(STATUS_CODES.SUCCESS).json({message: STATUS_MESSAGES.SUCCESS_RATING_UPDATE});
@@ -116,12 +138,16 @@ export const updateDrinkRating = async (req, res) => {
         }
 
         // 2 update the notes for the user to se on the drink
-        await Ratings.findOneAndUpdate({$and: {drinkID: drinkId, userId: req.user.id}}, rating, {new: true});
+        await Ratings.findOneAndUpdate({
+            $and: [
+                {drinkID: drinkId}, 
+                {userId: req.user.id}
+        ]}, rating, {new: true});
 
         // 3 return status
         res.status(STATUS_CODES.UPDATE_SUCCESS).json({message: STATUS_MESSAGES.SUCCESS_RATING_UPDATE})
     }catch(err){
-        res.status(STATUS_CODES.SERVER_ERROR).json({error: err});
+        res.status(STATUS_CODES.SERVER_ERROR).json({error: err.message});
     };
 };
 
