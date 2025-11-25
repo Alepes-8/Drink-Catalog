@@ -1,6 +1,7 @@
 export const STATUS_CODES = {
   SUCCESS: 200,
   CREATION_SUCCESS: 201,
+  UPDATE_SUCCESS: 202,
   INVALID_INPUT: 401,
   INSUFFICIENT_PERMISSIONS: 403,
   NOT_FOUND: 404,
@@ -9,7 +10,6 @@ export const STATUS_CODES = {
 
 export const MODEL_TYPES = {
   DRINK: "drinkRecipes",
-  INGREDIENT_TYPES: "ingredientType",
   INGREDIENTS: "ingredients",
   RATINGS: "ratings",
   NOTES: "notes",

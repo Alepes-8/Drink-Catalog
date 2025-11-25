@@ -51,10 +51,20 @@ export const login = async (req, res) => {
     }
 };
 
+//TODO adjust so that the user can delete only their own account unless admin
 export const deleteUser = async (req, res) => {
     try{
-        await Task.findByIdAndDelete(req.params.id);
-        res.json({message: "Task deleted"})
+        await User.findByIdAndDelete(req.user.id);
+        res.status(STATUS_CODES.SUCCESS).json({message: "User deleted"})
+    } catch(err){
+        res.status(400).json({error: err.message})
+    }
+};
+
+export const deleteUserByID = async (req, res) => {
+    try{
+        await User.findByIdAndDelete(req.params.id);
+        res.status(STATUS_CODES.SUCCESS).json({message: "User deleted"})
     } catch(err){
         res.status(400).json({error: err.message})
     }
@@ -69,5 +79,6 @@ export default {
     login, 
     register, 
     deleteUser,
-    updateUser
+    updateUser,
+    deleteUserByID
 };

@@ -29,7 +29,6 @@ export async function seedAdmin() {
         { $set: { name: "normal" } }, // Update
         { upsert: true, new: true }  // Options: create if missing + return updated doc
     );
-    console.log("Created admin role with ID:", userRole);
 
     await Users.create({
         email: username,

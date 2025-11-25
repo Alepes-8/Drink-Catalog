@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { MODEL_TYPES } from "../config/constants.js";
 import bcrypt from "bcryptjs";
 import UserRoles from "./userRoles.js";
+import Ratings from "./ratings.js";
+import Notes from "./notes.js";
 
 const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true, trim: true, lowercase: true},
@@ -19,6 +21,17 @@ userSchema.pre("save", async function (next) {
         if (!normalRole) throw new Error("Default role 'normal' not found");
         this.role = normalRole._id;
     }
+    next();
+});
+
+userSchema.pre("findByIdAndDelete", async function (next) {
+    const userId = this.getQuery()._id;
+
+    await Promise.all([
+        Notes.deleteMany({ userId }),
+        Ratings.deleteMany({ userId })
+    ]);
+
     next();
 });
 
