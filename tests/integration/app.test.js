@@ -1,23 +1,34 @@
-import app from "../../src/app.js"
 import request from "supertest";
+import app from "../../src/app.js";
+import { STATUS_CODES } from "../../src/config/constants.js";
 
-describe("Drink Integration Tests", () => {
+describe("Drink API Integration Tests", () => {
 
-    it("should respond on root route", async () => {
-        //arrange
+    it("GET / should return running message", async () => {
         const res = await request(app).get("/");
 
-        //assert
-        expect(res.statusCode).toBe(200);
-        expect(res.text).toMatch(/Drink API is running.../i); // or whatever your root returns
+        expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
+        expect(res.text).toMatch(/Drink API is running/i);
     });
 
-    it("should have /drink route mounted", async () => {
-        //arrange
+    it("GET /drink/health should return health status", async () => {
         const res = await request(app).get("/drink/health");
 
-        //assert
-        expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual({ status: "ok" });
+        expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
+
+        expect(res.body.apiCalled).toBe("ok");
+
+        // mongoStatus varies depending on connection state
+        expect(typeof res.body.mongoStatus).toBe("string");
+        expect(res.body.mongoStatus.length).toBeGreaterThan(0);
+    });
+
+    it("GET /api-docs should load Swagger UI", async () => {
+        const res = await request(app)
+            .get("/api-docs")
+            .redirects(1);    // follow the 301 redirect
+
+        expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
+        expect(res.text).toMatch(/Swagger UI/i);
     });
 });

@@ -93,7 +93,7 @@ export const getDrinkInformation = async (req, res) => {
                 { drinkID: drinkId },
                 { userId: req.user.id }
         ]}).exec();
-
+        
         returnValue.userRating = await Ratings.findOne({
             $and: [
                 { drinkID: drinkId },

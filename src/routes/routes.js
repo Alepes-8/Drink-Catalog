@@ -6,7 +6,7 @@ import requiredRole from "../authentication/authRole.js";
 
 const router = express.Router();
 
-router.get("/login", authenticationController.login)
+router.post("/login", authenticationController.login)
 router.post("/register", authenticationController.register)
 router.delete("/deleteUser", auth, authenticationController.deleteUser)
 router.delete("/deleteUserByID", auth, requiredRole("admin"), authenticationController.deleteUserByID)

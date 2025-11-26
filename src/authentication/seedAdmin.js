@@ -1,6 +1,5 @@
 import userRoles from "../models/userRoles.js";
 import Users from "../models/users.js";
-import bcrypt from "bcryptjs";
 
 export async function seedAdmin() {
     const username = process.env.APP_ADMIN_USERNAME.toLowerCase();
