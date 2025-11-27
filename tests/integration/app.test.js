@@ -4,7 +4,16 @@ import { STATUS_CODES } from "../../src/config/constants.js";
 import Ingredients from "../../src/models/ingredients.js";
 import mockingoose from "mockingoose";
 import DrinkRecipe from "../../src/models/drinkRecipe.js";
-import {START_DATA} from "../../src/config/testData/drinks_start_A.js";
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+const filePath = path.resolve(dirname, "../../src/config/testData/drinks_start_A.json");
+export const START_DATA = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+
 import { jest } from "@jest/globals";
 
 describe("Drink API Integration Tests", () => {
