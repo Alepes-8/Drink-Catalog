@@ -16,11 +16,11 @@ describe("Drink API Integration Tests", () => {
         mockingoose.resetAll();
     });
 
-    /* ---------------------------------------------------
-     * GET /health
-     * --------------------------------------------------- */
     it("GET /health should return service status", async () => {
+        //Act
         const res = await request(app).get("/drink/health");
+
+        //Arrange
         expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
         expect(res.body.apiCalled).toBe("ok");
     });
@@ -29,8 +29,10 @@ describe("Drink API Integration Tests", () => {
      * GET /searchByName
      * --------------------------------------------------- */
     it("GET /searchByName should return drinks matching name", async () => {
+        //Arrange
         const drinkId = new mongoose.Types.ObjectId();
         const ingredientId = new mongoose.Types.ObjectId();
+        const token = "mocktoken"; // auth middleware must accept this or be mocked
 
         const mockDrinks = [
             {
@@ -39,7 +41,6 @@ describe("Drink API Integration Tests", () => {
                 ingredients: [ingredientId]
             }
         ];
-
         const mockIngredients = [
             { _id: ingredientId, name: "lime" }
         ];
@@ -47,12 +48,12 @@ describe("Drink API Integration Tests", () => {
         mockingoose(DrinkRecipe).toReturn(mockDrinks, "find");
         mockingoose(Ingredients).toReturn(mockIngredients, "find");
 
-        const token = "mocktoken"; // auth middleware must accept this or be mocked
-
+        // Act
         const res = await request(app)
             .get("/drink/searchByName?drinkName=mar")
             .set("Authorization", `Bearer ${token}`);
 
+        // Assert
         expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
         expect(res.body.length).toBe(1);
         expect(res.body[0].name).toBe("margarita");
@@ -63,9 +64,10 @@ describe("Drink API Integration Tests", () => {
      * GET /searchByIngredients
      * --------------------------------------------------- */
     it("GET /searchByIngredients should search using ingredient names", async () => {
-
+        // Arrange
         const ingredientId = new mongoose.Types.ObjectId();
         const drinkId = new mongoose.Types.ObjectId();
+        const token = "mocktoken";
 
         const mockIngredients = [{ _id: ingredientId, name: "vodka" }];
         const mockDrinks = [{
@@ -77,13 +79,13 @@ describe("Drink API Integration Tests", () => {
         mockingoose(Ingredients).toReturn(mockIngredients, "find");
         mockingoose(DrinkRecipe).toReturn(mockDrinks, "find");
 
-        const token = "mocktoken";
-
+        // Act
         const res = await request(app)
             .get("/drink/searchByIngredients")
             .set("Authorization", `Bearer ${token}`)
             .send({ ingredients: ["vodka"] });
 
+        // Assert
         expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
         expect(res.body.result.length).toBe(1);
         expect(res.body.result[0].name).toBe("vodka tonic");
@@ -93,28 +95,26 @@ describe("Drink API Integration Tests", () => {
      * GET /getDrinkById
      * --------------------------------------------------- */
     it("GET /getDrinkById should return drink info including notes + rating", async () => {
-
+        // Arrange
         const drinkId = new mongoose.Types.ObjectId();
         const ingredientId = new mongoose.Types.ObjectId();
         const userId = new mongoose.Types.ObjectId();
+        const token = "mocktoken";
 
         const mockDrink = [{
             _id: drinkId,
             name: "old fashioned",
             ingredients: [ingredientId]
         }];
-
         const mockIngredient = [{
             _id: ingredientId,
             name: "whiskey"
         }];
-
         const mockNotes = {
             drinkID: drinkId,
             userId: userId,
             notes: "good drink"
         };
-
         const mockRating = {
             drinkID: drinkId,
             userId: userId,
@@ -126,13 +126,12 @@ describe("Drink API Integration Tests", () => {
         mockingoose(Notes).toReturn(mockNotes, "findOne");
         mockingoose(Ratings).toReturn(mockRating, "findOne");
 
-        // Mock user in auth middleware
-        const token = "mocktoken";
-        
+        // Act
         const res = await request(app)
             .get(`/drink/getDrinkById?drinkId=${drinkId}`)
             .set("Authorization", `Bearer ${token}`);
 
+        // Assert
         expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
         expect(res.body.returnValue.drinkData[0].name).toBe("old fashioned");
         expect(res.body.returnValue.notes.notes).toBe("good drink");
@@ -143,20 +142,21 @@ describe("Drink API Integration Tests", () => {
      * PUT /updateDrinkNote
      * --------------------------------------------------- */
     it("PUT /updateDrinkNote should update user's note", async () => {
+        // ACt
         const drinkId = new mongoose.Types.ObjectId();
         const userId = new mongoose.Types.ObjectId();
-
         const updated = { drinkID: drinkId, userId: userId, notes: "great drink" };
+        const token = "mocktoken";
 
         mockingoose(Notes).toReturn(updated, "findOneAndUpdate");
 
-        const token = "mocktoken";
-
+        // Act
         const res = await request(app)
             .put(`/drink/updateDrinkNote?drinkId=${drinkId}`)
             .set("Authorization", `Bearer ${token}`)
             .send({ notes: "great drink" });
 
+        // Assert
         expect(res.statusCode).toBe(STATUS_CODES.UPDATE_SUCCESS);
         expect(res.body.message).toBe(STATUS_MESSAGES.SUCCESS_NOTE_UPDATE);
     });
@@ -165,8 +165,10 @@ describe("Drink API Integration Tests", () => {
      * PUT /updateDrinkRating
      * --------------------------------------------------- */
     it("PUT /updateDrinkRating should update user's rating", async () => {
+        // Arrange
         const drinkId = new mongoose.Types.ObjectId();
         const userId = new mongoose.Types.ObjectId();
+        const token = "mocktoken";
 
         const updatedRating = {
             drinkID: drinkId,
@@ -176,13 +178,13 @@ describe("Drink API Integration Tests", () => {
 
         mockingoose(Ratings).toReturn(updatedRating, "findOneAndUpdate");
 
-        const token = "mocktoken";
-
+        // Act
         const res = await request(app)
             .put(`/drink/updateDrinkRating?drinkId=${drinkId}`)
             .set("Authorization", `Bearer ${token}`)
             .send({ rating: 8 });
 
+        // Assert
         expect(res.statusCode).toBe(STATUS_CODES.UPDATE_SUCCESS);
         expect(res.body.message).toBe(STATUS_MESSAGES.SUCCESS_RATING_UPDATE);
     });

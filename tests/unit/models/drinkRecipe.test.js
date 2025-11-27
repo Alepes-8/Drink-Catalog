@@ -8,6 +8,7 @@ describe("Drink Model Unit Tests", () => {
     beforeEach(() => mockingoose.resetAll());
 
     it("should save drink and convert ingredientNames into ObjectId references", async () => {
+        // arrange
         const ingredientId1 =  new mongoose.Types.ObjectId();
         const ingredientId2 =  new mongoose.Types.ObjectId();
 
@@ -15,20 +16,22 @@ describe("Drink Model Unit Tests", () => {
             { _id: ingredientId1, name: "vodka" },
             { _id: ingredientId2, name: "lime" }
         ];
-        
         const drinkData = {
             name: "vodka lime",
             ingredientNames: ["Vodka", "Lime"]
         };
+        const drink = new DrinkRecipe(drinkData);
+
         // Mock bulkWrite + find
         const mockResult = { acknowledged: true, modifiedCount: 1 };
         spyOn(Ingredients, 'bulkWrite').mockResolvedValue(mockResult);
         mockingoose(Ingredients).toReturn(ingredientDocs, "find");
         mockingoose(DrinkRecipe).toReturn(drinkData, "save");
 
-        const drink = new DrinkRecipe(drinkData);
+        //act
         const response = await drink.save();
 
+        //assert
         expect(response.name).toBe("vodka lime");
         expect(response.ingredientNames).toEqual(["Vodka", "Lime"]);
     });

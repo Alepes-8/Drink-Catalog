@@ -31,7 +31,7 @@ export const login = async (req, res) => {
         if(!user || !(await bcrypt.compare(userInput.password, user.password))){
            return res.status(STATUS_CODES.INVALID_INPUT).json({ error: "Invalid credentials" });
         };
-
+        
         const userRole = await UserRoles.findById(user.role);
 
         // 2 create a JWT

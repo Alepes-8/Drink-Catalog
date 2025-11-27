@@ -1,4 +1,4 @@
-import userRoles from "../models/userRoles.js";
+import UserRoles from "../models/userRoles.js";
 import Users from "../models/users.js";
 
 export async function seedAdmin() {
@@ -18,12 +18,12 @@ export async function seedAdmin() {
     return;
     }
 
-    const userRole = await userRoles.findOneAndUpdate(
+    const userRole = await UserRoles.findOneAndUpdate(
         { name: "admin" },           // Query
         { $set: { name: "admin" } }, // Update
         { upsert: true, new: true }  // Options: create if missing + return updated doc
     );
-    await userRoles.findOneAndUpdate(
+    await UserRoles.findOneAndUpdate(
         { name: "normal" },           // Query
         { $set: { name: "normal" } }, // Update
         { upsert: true, new: true }  // Options: create if missing + return updated doc
