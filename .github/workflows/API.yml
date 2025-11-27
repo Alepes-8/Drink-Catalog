@@ -36,12 +36,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-
-      - name: Seed Admin
-        working-directory: ./src
-        run: |
-          node -e "import('./authentication/seedAdmin.js').then(m => m.seedAdmin())"
-          
       # Wait for MongoDB port to be ready
       - name: Wait for MongoDB
         run: |
@@ -57,6 +51,11 @@ jobs:
         working-directory: ./src
         run: npm install
       
+      - name: Seed Admin
+        working-directory: ./src
+        run: |
+          node -e "import('./authentication/seedAdmin.js').then(m => m.seedAdmin())"
+
       - name: Start the drink_api
         working-directory: ./src
         env: 
