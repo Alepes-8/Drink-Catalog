@@ -8,15 +8,18 @@ import {STATUS_CODES} from '../config/constants.js';
 export const register = async (req, res) => {
     try {
         const userData = {};
-        if (req.body.email) userData.email = req.body.email.toString().toLowerCase();
-        if (req.body.password) userData.password = req.body.password.toString();
+        if (req.body.email) userData.email = req.body.email.toLowerCase();
+        if (req.body.password) userData.password = req.body.password;
 
         await User.create(userData);
 
         res.status(STATUS_CODES.CREATION_SUCCESS).json({ message: "User registered" });
     } catch (err) {
-        // 👇 ADD THIS (THIS IS WHAT YOU NEED)
+
+        // ⭐⭐⭐ ADD THESE TWO LINES ⭐⭐⭐
         console.error("REGISTER ERROR:", err);
+        console.error("BODY RECEIVED:", req.body);
+        // ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
 
         res.status(STATUS_CODES.SERVER_ERROR).json({ error: err.message });
     }
