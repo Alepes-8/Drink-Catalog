@@ -15,6 +15,9 @@ jobs:
       APP_ADMIN_USERNAME: admin
       APP_ADMIN_PASSWORD: password123
       JWT_SECRET: testsecret
+      MONGO_URI: mongodb://localhost:27017/drink
+      PORT: 5001
+
     services:
       mongo:
         image: mongo:5.0
@@ -26,15 +29,17 @@ jobs:
           --health-retries=5
 
     steps:
+      # 1 Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2 Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # Wait for MongoDB port to be ready
+      # 3 Wait for MongoDB port
       - name: Wait for MongoDB
         run: |
           sudo apt-get update
@@ -44,45 +49,42 @@ jobs:
             sleep 2
           done
 
-      # Setup the Drink api
+      # 4 Install API dependencies
       - name: Install drink_api dependencies
         working-directory: ./src
-        run: npm install
-      
-      - name: Start the drink_api
-        working-directory: ./src
-        env: 
-          MONGO_URI: mongodb://localhost:27017/drink
-        run: |
-          PORT=5001 node app.js > server.log 2>&1 &
+        run: npm ci
 
-      - name: Debug Drink Catalog API startup
+      # 5 Start API in background
+      - name: Start the Drink API
         working-directory: ./src
         run: |
+          node app.js > server.log 2>&1 &
+          echo $! > node.pid
           sleep 5
-          cat server.log
 
-      - name: Show listening ports
-        run: |
-          sleep 5
-          sudo lsof -i -P -n | grep LISTEN
-
+      # 6 Wait for API to be ready
       - name: Wait for Drink API
         working-directory: ./src
-        run: |
-          npx wait-on --timeout 60000 http://localhost:5001/drink/health
+        run: npx wait-on --timeout 60000 http://localhost:5001/drink/health
 
-      - name: Run Drink postman API tests with Newman
+      # 7 Debug API logs
+      - name: Debug Drink API startup
+        working-directory: ./src
+        run: cat server.log
+
+      # 8 Run Postman Newman tests
+      - name: Run Postman tests with Newman
         working-directory: .
         run: |
           npm install newman
-          npx newman run postman/Drink_basis.postman_collection.json \ -e postman/drinking.postman_environment.json
+          npx newman run postman/Drink_basis.postman_collection.json -e postman/drinking.postman_environment.json
 
-      # Run Jest tests
-      - name: Run Jest tests for drink Manager API
+      # 9 Run Jest unit/integration tests
+      - name: Run Jest tests for Drink API
         working-directory: .
         run: npm test -- --coverage
 
+      #  Upload Jest coverage
       - name: Upload Recipe Manager coverage report
         if: always()
         uses: actions/upload-artifact@v4
@@ -90,29 +92,37 @@ jobs:
           name: recipe-manager-coverage
           path: ./smallProjects/recipe_manager_api/coverage
 
-# Stop earlier containers as they are not needed for the following tests.
+      # 1️⃣1️⃣ Stop Node API
+      - name: Stop Node API
+        working-directory: ./src
+        run: |
+          if [ -f node.pid ]; then
+            kill -9 $(cat node.pid) || true
+          fi
+
+      # 1️⃣2️⃣ Clean up old containers (Docker)
       - name: Clean up old containers
         run: docker ps -aq | xargs -r docker rm -f
 
-# Run docker test
+      # 1️⃣3️⃣ Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # 1️⃣4️⃣ Install docker-compose
       - name: Install docker-compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
+      # 1️⃣5️⃣ Show directory
       - name: Show current directory
         run: |
           pwd
           ls -la
 
+      # 1️⃣6️⃣ Run Dockerized Tests
       - name: Run Dockerized Tests
         run: |
-          # Build and start all services, stop all containers when one exits
           docker-compose -f ./docker-compose.test.yml up --build --abort-on-container-exit
-          
-          # Tear down containers and volumes after tests
           docker-compose -f ./docker-compose.test.yml down --volumes
