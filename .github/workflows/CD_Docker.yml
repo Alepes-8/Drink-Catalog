@@ -36,8 +36,7 @@ jobs:
           echo "APP_ADMIN_PASSWORD=password123" >> Drink-Catalog/.env
 
       - name: Run tests
-        run: docker compose -f Drink-Catalog/docker-compose.yml --env-file Drink-Catalog/.env run --rm -e NODE_ENV=test drink_api npm test
-
+        run: docker compose run --rm -e NODE_ENV=test drink_api npm test
 
       - name: Stop services
         run: docker compose -f docker-compose.yml down
