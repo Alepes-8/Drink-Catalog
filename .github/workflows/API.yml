@@ -73,7 +73,19 @@ jobs:
         working-directory: .
         run: |
           npm install newman
-          npx newman run postman/Drink_basis.postman_collection.json
+          npx newman run postman/Drink_basis.postman_collection.json \ -e postman/drinking.postman_environment.json
+
+      # Run Jest tests
+      - name: Run Jest tests for drink Manager API
+        working-directory: .
+        run: npm test -- --coverage
+
+      - name: Upload Recipe Manager coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recipe-manager-coverage
+          path: ./smallProjects/recipe_manager_api/coverage
 
 # Stop earlier containers as they are not needed for the following tests.
       - name: Clean up old containers
