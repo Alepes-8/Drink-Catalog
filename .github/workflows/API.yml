@@ -51,11 +51,6 @@ jobs:
         working-directory: ./src
         run: npm install
       
-      - name: Seed Admin
-        working-directory: ./src
-        run: |
-          node -e "import('./authentication/seedAdmin.js').then(m => m.seedAdmin())"
-
       - name: Start the drink_api
         working-directory: ./src
         env: 
@@ -71,6 +66,11 @@ jobs:
         run: |
           curl -v http://localhost:5001/drink/health || true
         
+      - name: Seed Admin
+        working-directory: ./src
+        run: |
+          node -e "import('./authentication/seedAdmin.js').then(m => m.seedAdmin())"
+
       - name: Run Postman tests
         working-directory: .
         run: |
