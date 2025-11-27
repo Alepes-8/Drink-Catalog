@@ -1,5 +1,5 @@
-export const START_DATA = {
-    DATA: [
+{
+    "DATA": [
         {
             "idDrink": "17222",
             "strDrink": "A1",
@@ -1326,4 +1326,4 @@ export const START_DATA = {
             "dateModified": "2017-09-07 22:15:25"
         }
     ]
-};
+}

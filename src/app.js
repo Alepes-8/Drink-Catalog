@@ -3,15 +3,22 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import routes from "./routes/routes.js"
 import { swaggerUi, swaggerSpec } from "../swagger/swaggerConfig.js";
 import YAML from "yamljs";
-import { fileURLToPath } from "url";
-import path from "path";
 import { MONGO_URI, PORT } from './config/config.js';
-import {START_DATA} from "./config/testData/drinks_start_A.js";
+
+import routes from "./routes/routes.js"
 import DrinkRecipe from "./models/drinkRecipe.js";
 import Ingredients from "./models/ingredients.js";
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+const filePath = path.resolve(dirname, "./config/testData/drinks_start_A.json");
+export const START_DATA = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
 //Create application and set it to use jsonb and movie routes.
 dotenv.config();
