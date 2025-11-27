@@ -27,7 +27,7 @@ jobs:
 
       - name: Run tests
         working-directory: /home/runner/work/Drink-Catalog
-        run: docker compose run --rm -e NODE_ENV=test drink_api npm test
+        run: docker compose --env-file .env run --rm -e NODE_ENV=test drink_api npm test
 
       - name: Stop services
         run: docker compose -f docker-compose.yml down
