@@ -133,4 +133,5 @@ async function populateDatabase(){
 };
 
 // ----------------- Export app for testing -----------------
-export default app
+export default app 
+export { populateDatabase };

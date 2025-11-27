@@ -1,6 +1,11 @@
 import request from "supertest";
 import app from "../../src/app.js";
 import { STATUS_CODES } from "../../src/config/constants.js";
+import Ingredients from "../../src/models/ingredients.js";
+import mockingoose from "mockingoose";
+import DrinkRecipe from "../../src/models/drinkRecipe.js";
+import {START_DATA} from "../../src/config/testData/drinks_start_A.js";
+import { jest } from "@jest/globals";
 
 describe("Drink API Integration Tests", () => {
 
@@ -34,4 +39,62 @@ describe("Drink API Integration Tests", () => {
         expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
         expect(res.text).toMatch(/Swagger UI/i);
     });
+    /*
+    it("create test data integration test", async () => {
+        // Arrange
+        const ingredientData
+
+        mockingoose(UserRoles).toReturn({}, "deleteMany");
+        const mockResult = { acknowledged: true, modifiedCount: 1 };
+        spyOn(Ingredients, 'bulkWrite').mockResolvedValue(mockResult);
+        mockingoose(UserRoles).toReturn(ingredientData, "find");
+
+        
+        // Act
+        const { populateDatabase } = await import("../../src/app.js");
+        await populateDatabase();
+
+        // Assert
+    });
+*/
+    it("should delete all existing drinks and upsert ingredients and drinks", async () => {
+    // Mock deleteMany
+    mockingoose(DrinkRecipe).toReturn({}, "deleteMany");
+
+    // Mock Ingredients.bulkWrite and find
+    const mockIngredientsDocs = START_DATA.DATA.slice(0, 3) // take first 3 for brevity
+      .flatMap(drink => {
+        return Array.from({ length: 3 }, (_, i) => ({
+          _id: `ingredientId${i}`,
+          name: `ingredient${i}`,
+        }));
+      });
+
+    const mockResult = { acknowledged: true, modifiedCount: 1 };
+    jest.spyOn(Ingredients, 'bulkWrite').mockResolvedValue(mockResult);
+    mockingoose(Ingredients).toReturn(mockIngredientsDocs, "find");
+
+    const mockResul2 = { acknowledged: true, modifiedCount: 1 };
+    jest.spyOn(DrinkRecipe, 'bulkWrite').mockResolvedValue(mockResul2);
+    mockingoose(DrinkRecipe).toReturn({}, "create");
+
+    jest.spyOn(DrinkRecipe, "deleteMany").mockResolvedValue();
+    jest.spyOn(DrinkRecipe, "create").mockResolvedValue();
+
+
+    // Act
+    const { populateDatabase } = await import("../../src/app.js");
+    await populateDatabase();
+
+    // Assert deleteMany was called
+    expect(DrinkRecipe.deleteMany).toHaveBeenCalled();
+    expect(Ingredients.bulkWrite).toHaveBeenCalled();
+    expect(DrinkRecipe.bulkWrite).toHaveBeenCalled();
+    
+    expect(DrinkRecipe.create).toHaveBeenCalledWith({
+      name: "test drink",
+      ingredientNames: ["test whisky", "test sockerlag", "test angostura bitters"]
+    });
+  });
+
 });
