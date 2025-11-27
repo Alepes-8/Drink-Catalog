@@ -17,8 +17,7 @@ jobs:
       JWT_SECRET: testsecret
       MONGO_URI: mongodb://localhost:27017/drink
       PORT: 5001
-    run: |
-      node -e "import('./src/authentication/seedAdmin.js').then(m => m.seedAdmin())"
+
     services:
       mongo:
         image: mongo:5.0
@@ -38,6 +37,11 @@ jobs:
         with:
           node-version: 18
 
+      - name: Seed Admin
+        working-directory: ./src
+        run: |
+          node -e "import('./authentication/seedAdmin.js').then(m => m.seedAdmin())"
+          
       # Wait for MongoDB port to be ready
       - name: Wait for MongoDB
         run: |
