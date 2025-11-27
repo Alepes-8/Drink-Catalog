@@ -64,7 +64,7 @@ jobs:
 
       - name: Test API Health manually
         run: |
-          curl -v http://localhost:5000/api/recipes/health || true
+          curl -v http://localhost:5001/drink/health || true
         
       - name: Run Postman tests
         working-directory: .
