@@ -26,8 +26,8 @@ jobs:
         run: docker compose -f docker-compose.yml up -d mongo
 
       - name: Run tests
-        working-directory: ${{ github.workspace }}
-        run: docker compose run --rm -e NODE_ENV=test drink_api npm test
+        run: docker compose --env-file /home/runner/work/Drink-Catalog/.env \
+            run --rm -e NODE_ENV=test drink_api npm test
 
       - name: Stop services
         run: docker compose -f docker-compose.yml down
