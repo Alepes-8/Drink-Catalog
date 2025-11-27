@@ -26,19 +26,18 @@ jobs:
         run: docker compose -f docker-compose.yml up -d mongo
 
       # Create testing admin and secret keys. TODO verify that this isn't a security error in the future
-      - name: Create .env file
+      - name: Create .env
         run: |
-          echo "NODE_ENV=test" >> .env
-          echo "PORT=5001" >> .env
-          echo "MONGO_URI=mongodb://mongo:27017/drink" >> .env
-          echo "JWT_SECRET=testsecret" >> .env
-          echo "APP_ADMIN_USERNAME=admin" >> .env
-          echo "APP_ADMIN_PASSWORD=password123" >> .env
-        working-directory: /home/runner/work/Drink-Catalog
+          echo "NODE_ENV=test" > Drink-Catalog/.env
+          echo "PORT=5001" >> Drink-Catalog/.env
+          echo "MONGO_URI=mongodb://mongo:27017/drink" >> Drink-Catalog/.env
+          echo "JWT_SECRET=testsecret" >> Drink-Catalog/.env
+          echo "APP_ADMIN_USERNAME=admin" >> Drink-Catalog/.env
+          echo "APP_ADMIN_PASSWORD=password123" >> Drink-Catalog/.env
 
       - name: Run tests
-        working-directory: /home/runner/work/Drink-Catalog
-        run: docker compose --env-file .env run --rm -e NODE_ENV=test drink_api npm test
+        run: docker compose -f Drink-Catalog/docker-compose.yml --env-file Drink-Catalog/.env run --rm -e NODE_ENV=test drink_api npm test
+
 
       - name: Stop services
         run: docker compose -f docker-compose.yml down
