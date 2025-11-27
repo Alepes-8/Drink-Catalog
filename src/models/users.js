@@ -13,15 +13,22 @@ const userSchema = new mongoose.Schema({
 
 // Hash password before saving
 userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
-    this.password = await bcrypt.hash(this.password, 10);
+    try{
+        if (!this.isModified("password")) return next();
+        this.password = await bcrypt.hash(this.password, 10);
 
-    if (!this.role) {
-        const normalRole = await UserRoles.findOne({ name: "normal" });
-        if (!normalRole) throw new Error("Default role 'normal' not found");
-        this.role = normalRole._id;
+        if (!this.role) {
+            const normalRole = await UserRoles.findOne({ name: "normal" });
+            if (!normalRole) {
+                console.error("❌ CI ERROR: 'normal' user role is missing!");
+                return next(new Error("Default role 'normal' not found"));
+            }
+            this.role = normalRole._id;
+        }
+        next();
+    }catch(err){
+        next(err); 
     }
-    next();
 });
 
 userSchema.pre("findByIdAndDelete", async function (next) {
