@@ -11,7 +11,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest  # Sets up a virtual machine to run the job on (ubuntu-latest, windows-latest, macos-latest)
-    
+    env:
+      APP_ADMIN_USERNAME: admin
+      APP_ADMIN_PASSWORD: password123
+      JWT_SECRET: testsecret
     services:
       mongo:
         image: mongo:5.0
