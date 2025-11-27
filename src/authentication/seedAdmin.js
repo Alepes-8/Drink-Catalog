@@ -4,7 +4,7 @@ import Users from "../models/users.js";
 export async function seedAdmin() {
     const username = process.env.APP_ADMIN_USERNAME.toLowerCase();
     const password = process.env.APP_ADMIN_PASSWORD?.trim();
-    await Users.deleteMany({}); // Deletes all users  // TODO : Remove this line after testing
+    //await Users.deleteMany({}); // Deletes all users  // TODO : Remove this line after testing
 
     if (!username || !password) {
     console.warn("APP_ADMIN_USERNAME or APP_ADMIN_PASSWORD not set. Skipping admin seed.");
