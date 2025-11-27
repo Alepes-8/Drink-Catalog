@@ -18,10 +18,12 @@ services:
     ports:
       - "5001:5001"
     environment:
-      - port=${PORT}
-      - MONGO_URI=${MONGO_URI}
+      - port=5001
+      - MONGO_URI=mongodb://mongo:27017/drink
     depends_on:
       - mongo
+    env_file:
+      - ./.env
           
 volumes:
   mongo-data:

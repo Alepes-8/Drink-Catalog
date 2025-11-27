@@ -11,6 +11,11 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node src/app.js"
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^../authentication/authMiddleware\\.js$": "<rootDir>/tests/__mocks__/authMiddleware.js"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

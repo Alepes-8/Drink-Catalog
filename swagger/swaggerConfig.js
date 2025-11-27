@@ -7,9 +7,9 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Entertainment Catalog API",
+      title: "Drink Catalog API",
       version: "1.0.0",
-      description: "API documentation for the Entertainment Catalog project",
+      description: "API documentation for the Drink Catalog project",
     },
     servers: [
       {

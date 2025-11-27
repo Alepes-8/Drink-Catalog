@@ -16,9 +16,5 @@ COPY . .
 # Expose port
 EXPOSE 5001
 
-# Environment vars
-ENV PORT=5001
-ENV MONGO_URI=mongodb://mongo:27017/drink
-
 # Start app
 CMD ["node", "src/app.js"]
