@@ -8,8 +8,8 @@
 ## Overall Relationship Graph
 
 The connection works as follows:  
-- **Availability** references both **Entertainment** and **Platform** IDs.  //TODO 
-- **Entertainment** references **Genre** IDs.                               //TODO 
+- **DrinkRecipe** references both **Ingredients**, **notes**, and **ratings** IDs.
+- **users** references  **notes**, **ratings**, and **userRoles** IDs. 
 
           DrinkRecipe    users
             /     |   \ /   |  \

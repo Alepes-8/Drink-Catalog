@@ -41,7 +41,7 @@ jobs:
             sleep 2
           done
 
-      # Setup the entertainment_api
+      # Setup the Drink api
       - name: Install drink_api dependencies
         working-directory: ./src
         run: npm install
@@ -64,7 +64,7 @@ jobs:
           sleep 5
           sudo lsof -i -P -n | grep LISTEN
 
-      - name: Wait for Entertainment API
+      - name: Wait for Drink API
         working-directory: ./src
         run: |
           npx wait-on --timeout 60000 http://localhost:5001/drink/health
