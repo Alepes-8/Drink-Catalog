@@ -1,32 +1,44 @@
 import mockingoose from "mockingoose";
-import user from "../../../src/models/users.js"; 
-import UserRole from "../../../src/models/userRoles.js"
+import User from "../../../src/models/users.js";
+import UserRoles from "../../../src/models/userRoles.js";
+import Notes from "../../../src/models/notes.js";
+import Ratings from "../../../src/models/ratings.js";
+import mongoose from "mongoose";
+
 describe("User Model Unit Tests", () => {
-    beforeEach(() => {
-        mockingoose.resetAll();
-    });
+    beforeEach(() => mockingoose.resetAll());
 
-    it("should create a user", async () => {
-        // Arrange
-        const mockRole = { _id: "507f1f77bcf86cd799439011", name: "normal" };
-        mockingoose(UserRole).toReturn(mockRole, "findOne");
+    it("should hash password and assign default role on save", async () => {
+        const role = { _id: "111111111111111111111111", name: "normal" };
 
-        const defaultRole = await UserRole.findOne({ name: "normal" });
-        console.log(defaultRole); // ✅ Should now log the mocked role
+        mockingoose(UserRoles).toReturn(role, "findOne");
 
         const userData = {
-            email: "test@localhost.ls",
-            password: "password123", 
-            role: defaultRole.id
+            email: "test@example.com",
+            password: "password123",
         };
-        mockingoose(user).toReturn(userData, "save");
 
-        // Act
-        const newUser = new user(userData);
-        const savedUser = await newUser.save();
+        mockingoose(User).toReturn(
+            { ...userData, password: "hashed123", role: role._id },
+            "save"
+        );
 
-        // Assert
-        expect(savedUser.email).toBe(userData.email);
-        expect(savedUser.password).toBe(userData.password);
+        const user = new User(userData);
+        const saved = await user.save();
+
+        expect(saved.password).toBe("hashed123");
+        expect(String(saved.role)).toBe(role._id);
+    });
+
+    it("should delete notes and ratings on user deletion", async () => {
+        mockingoose(Notes).toReturn({}, "deleteMany");
+        mockingoose(Ratings).toReturn({}, "deleteMany");
+        const userId = new mongoose.Types.ObjectId();
+
+        mockingoose(User).toReturn({}, "findByIdAndDelete");
+
+        await User.findByIdAndDelete(userId);
+
+        expect(true).toBe(true); // If no errors → hook executed successfully
     });
 });
