@@ -70,12 +70,6 @@ if (process.env.NODE_ENV !== "test") {
   populateDatabase();
 
   app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} \n Address ${MONGO_URI}`));
-} else {
-  // Test environment: seed roles automatically
-  mongoose.connect(MONGO_URI).then(async () => {
-    const { seedAdmin } = await import("./authentication/seedAdmin.js");
-    await seedAdmin();
-  });
 }
 
 async function populateDatabase(){
