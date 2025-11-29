@@ -42,12 +42,11 @@ jobs:
       - name: Run tests
         run: docker compose run --rm -e NODE_ENV=test drink_api npm test
 
-  #     - name: Stop services
-  #       run: docker compose -f docker-compose.yml down
+      - name: Stop services
+        run: docker compose -f docker-compose.yml down
 
-  #     # TODO, consider if this should be in the deploy instead. And while the test says where it is.
-  #     - name: Push images to GHCR
-  #       run: docker compose -f docker-compose.yml push
+      - name: Push images to GHCR
+        run: docker compose -f docker-compose.yml push
         
   # deploy:
   #   needs: cd-build-and-push
