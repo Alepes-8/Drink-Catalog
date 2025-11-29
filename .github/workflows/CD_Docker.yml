@@ -43,7 +43,7 @@ jobs:
       - name: Push images to GHCR
         run: docker compose -f docker-compose.yml push
         
-  deploy-render::
+  deploy-render:
     needs: cd-build-and-push
     runs-on: ubuntu-latest
 
