@@ -30,7 +30,15 @@ jobs:
       # Run tests in the test containers defined in docker-compose.yml
       - name: Start dependent services
         run: docker compose -f docker-compose.yml up -d mongo
-        
+
+      - name: Create .env file
+        run: |
+          echo "PORT=5001" >> .env
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "APP_ADMIN_USERNAME=${{ secrets.APP_ADMIN_USERNAME }}" >> .env
+          echo "APP_ADMIN_PASSWORD=${{ secrets.APP_ADMIN_PASSWORD }}" >> .env
+
       - name: Run tests
         run: docker compose run --rm -e NODE_ENV=test drink_api npm test
 
