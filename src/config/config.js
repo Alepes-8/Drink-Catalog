@@ -10,7 +10,7 @@ if (!MONGO_URI) {
     process.exit(1); // Fail fast
   } else {
     console.warn("⚠️ MONGO_URI not defined, falling back to localhost for development");
-     MONGO_URI = "mongodb://localhost:27017/drink";
+     MONGO_URI = "mongodb://localhost:27017/drinksssssssssssssss";
   }
 }
 
