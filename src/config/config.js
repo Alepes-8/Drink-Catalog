@@ -15,5 +15,6 @@ if (!MONGO_URI) {
 }
 
 export const PORT = process.env.PORT || 5001;
+export const NODE_ENV = process.env.NODE_ENV || "should not be";
 
 console.log(`📡 Using Mongo URI: ${MONGO_URI}`);
