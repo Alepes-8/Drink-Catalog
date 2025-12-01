@@ -5,7 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { swaggerUi, swaggerSpec } from "../swagger/swaggerConfig.js";
 import YAML from "yamljs";
-import { MONGO_URI, PORT } from './config/config.js';
+import { MONGO_URI, PORT, NODE_ENV } from './config/config.js';
 
 import routes from "./routes/routes.js"
 import DrinkRecipe from "./models/drinkRecipe.js";
@@ -69,7 +69,7 @@ if (process.env.NODE_ENV !== "test") {
 
   populateDatabase();
 
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} \n Address ${MONGO_URI}`));
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} \n Address ${MONGO_URI}, \n the ${}`));
 }
 
 async function populateDatabase(){
