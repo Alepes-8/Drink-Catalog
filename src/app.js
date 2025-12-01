@@ -58,18 +58,23 @@ if (process.env.NODE_ENV !== "test") {
 
   mongoose
     .connect(MONGO_URI)
-    .then(async () =>{
-      console.log("✅ MongoDB connected")
-      
-      // Seed admin after connection
+    .then(async () => {
+      console.log("✅ MongoDB connected");
+
+      // ---- RUN ANYTHING THAT REQUIRES A DB CONNECTION ----
       const { seedAdmin } = await import("./authentication/seedAdmin.js");
-      await seedAdmin();
-     })
-    .catch(err => console.error("❌ MongoDB connection error:", err));
+      await seedAdmin();               // safe
+      await populateDatabase();        // safe
 
-  populateDatabase();
-
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} \n Address ${MONGO_URI}, \n the ${NODE_ENV}`));
+      // ---- START SERVER ONLY AFTER DB IS READY ----
+      app.listen(PORT, () =>
+        console.log(`🚀 Server running on port ${PORT}\n Address ${MONGO_URI}\n the ${NODE_ENV}`)
+      );
+    })
+    .catch((err) => {
+      console.error("❌ MongoDB connection error:", err);
+      process.exit(1);
+    });
 }
 
 async function populateDatabase(){
