@@ -69,7 +69,7 @@ if (process.env.NODE_ENV !== "test") {
 
   populateDatabase();
 
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} \n Address ${MONGO_URI}, \n the ${}`));
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} \n Address ${MONGO_URI}, \n the ${NODE_ENV}`));
 }
 
 async function populateDatabase(){
