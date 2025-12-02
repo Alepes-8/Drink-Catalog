@@ -14,9 +14,12 @@ const dirname = path.dirname(filename);
 const filePath = path.resolve(dirname, "../../src/config/testData/drinks_start_A.json");
 export const START_DATA = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
-import { jest } from "@jest/globals";
+import { beforeEach, jest } from "@jest/globals";
 
 describe("Drink API Integration Tests", () => {
+    beforeEach(() => {
+        jest.resetModules(); // Clear the module cache
+    })
 
     it("GET / should return running message", async () => {
         // Act
@@ -48,6 +51,50 @@ describe("Drink API Integration Tests", () => {
         expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
         expect(res.text).toMatch(/Swagger UI/i);
     });
+
+    it("should warn and fallback to localhost if MONGO_URI is undefined and not in production", async () => {
+        delete process.env.MONGO_URI;
+        process.env.NODE_ENV = "development";
+
+        const consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+        const processExitSpy = jest.spyOn(process, "exit").mockImplementation(() => {});
+
+        const { MONGO_URI } = await import("../../src/config/config.js");
+        
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+            expect.stringContaining("falling back to localhost")
+        );
+        expect(MONGO_URI).toBe("mongodb://localhost:27017/drink");
+        expect(processExitSpy).not.toHaveBeenCalled();
+    });
+        /*
+    it("should error and exit if MONGO_URI is undefined in production", async () => {
+        delete process.env.MONGO_URI;
+        process.env.NODE_ENV = "production";
+        const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+        const processExitSpy = jest.spyOn(process, "exit").mockImplementation(() => {});
+
+        const { MONGO_URI } = await import("../../src/config/config.js");
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+            expect.stringContaining("MONGO_URI is not defined")
+        );
+        expect(processExitSpy).toHaveBeenCalledWith(1);
+    });
+
+    it("should use MONGO_URI from environment if defined", async () => {
+        process.env.MONGO_URI = "mongodb://custom:27017/test";
+        process.env.NODE_ENV = "development";
+        const consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+        const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+        const { MONGO_URI } = await import("../../src/config/config.js");
+
+        expect(MONGO_URI).toBe("mongodb://custom:27017/test");
+        expect(consoleWarnSpy).not.toHaveBeenCalled();
+        expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+    */
     /*
     it("create test data integration test", async () => {
         // Arrange
@@ -89,7 +136,6 @@ describe("Drink API Integration Tests", () => {
 
     jest.spyOn(DrinkRecipe, "deleteMany").mockResolvedValue();
     jest.spyOn(DrinkRecipe, "create").mockResolvedValue();
-
 
     // Act
     const { populateDatabase } = await import("../../src/app.js");
