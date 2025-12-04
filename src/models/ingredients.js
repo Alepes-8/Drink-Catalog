@@ -5,4 +5,5 @@ const ingredientsSchema = new mongoose.Schema({
     name: {type: String, required: true, unique: true},
 });
 
-export default mongoose.model(MODEL_TYPES.INGREDIENTS ,ingredientsSchema);
+export default mongoose.models[MODEL_TYPES.INGREDIENTS]
+  || mongoose.model(MODEL_TYPES.INGREDIENTS, ingredientsSchema);

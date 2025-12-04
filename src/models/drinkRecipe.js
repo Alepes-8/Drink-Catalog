@@ -38,4 +38,5 @@ drinkSchema.pre("save", async function (next){
     next();
 });
 
-export default mongoose.model(MODEL_TYPES.DRINK , drinkSchema);
+export default mongoose.models[MODEL_TYPES.DRINK]
+  || mongoose.model(MODEL_TYPES.DRINK, drinkSchema);

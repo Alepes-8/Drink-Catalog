@@ -91,8 +91,6 @@ describe("Authentication Controller Tests (DI version)", () => {
      * --------------------------------------------------- */
     it("DELETE /deleteUser should delete current user", async () => {
         // Arrange
-        const mockUserId = new mongoose.Types.ObjectId();
-
         mockingoose(User).toReturn({}, "findByIdAndDelete");
 
         // Act

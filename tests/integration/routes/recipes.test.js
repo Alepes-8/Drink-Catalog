@@ -91,6 +91,64 @@ describe("Drink API Integration Tests", () => {
         expect(res.body.result[0].name).toBe("vodka tonic");
     });
 
+    it("GET /searchByIngredients should includeAll", async () => {
+        // Arrange
+        const ingredientId = new mongoose.Types.ObjectId();
+        const drinkId = new mongoose.Types.ObjectId();
+        const token = "mocktoken";
+
+        const mockIngredients = [{ _id: ingredientId, name: "vodka" }];
+        const mockDrinks = [{
+            _id: drinkId,
+            name: "vodka tonic",
+            ingredients: [ingredientId]
+        }];
+
+        mockingoose(Ingredients).toReturn(mockIngredients, "find");
+        mockingoose(DrinkRecipe).toReturn(mockDrinks, "find");
+
+        // Act
+        const res = await request(app)
+            .post("/drink/searchByIngredients?typeOfSearch=includeAll")
+            .set("Authorization", `Bearer ${token}`)
+            .send({ ingredients: ["vodka"] });
+
+        // Assert
+        expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
+        expect(res.body.result.length).toBe(1);
+        expect(res.body.result[0].name).toBe("vodka tonic");
+    });
+
+        it("GET /searchByIngredients should includeAll", async () => {
+        // Arrange
+        const ingredientId = new mongoose.Types.ObjectId();
+        const drinkId = new mongoose.Types.ObjectId();
+        const token = "mocktoken";
+
+        const mockIngredients = [{ _id: ingredientId, name: "Soda" }];
+
+        const mockDrinks = [{
+            _id: drinkId,
+            name: "vodka tonic",
+            ingredients: [ingredientId]
+        }];
+
+        mockingoose(Ingredients).toReturn(mockIngredients, "find");
+        mockingoose(DrinkRecipe).toReturn(mockDrinks, "find");
+
+        // Act
+        const res = await request(app)
+            .post("/drink/searchByIngredients?typeOfSearch=exclude")
+            .set("Authorization", `Bearer ${token}`)
+            .send({ ingredients: ["vodka"] });
+
+        // Assert
+        expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
+        expect(res.body.result.length).toBe(1);
+        expect(res.body.result[0].name).toBe("vodka tonic");
+    });
+
+
     /* ---------------------------------------------------
      * GET /getDrinkById
      * --------------------------------------------------- */
@@ -187,5 +245,21 @@ describe("Drink API Integration Tests", () => {
         // Assert
         expect(res.statusCode).toBe(STATUS_CODES.UPDATE_SUCCESS);
         expect(res.body.message).toBe(STATUS_MESSAGES.SUCCESS_RATING_UPDATE);
+    });
+
+    it("PUT /updateDrinkRating with an incorrect rating input value", async () => {
+        // Arrange
+        const drinkId = new mongoose.Types.ObjectId();
+        const token = "mocktoken";
+
+        // Act
+        const res = await request(app)
+            .put(`/drink/updateDrinkRating?drinkId=${drinkId}`)
+            .set("Authorization", `Bearer ${token}`)
+            .send({ rating: 2665 });
+
+        // Assert
+        expect(res.statusCode).toBe(STATUS_CODES.INVALID_INPUT);
+        expect(res.body.message).toBe(STATUS_MESSAGES.UNSUCCESSFUL_RATING_UPDATE);
     });
 });
