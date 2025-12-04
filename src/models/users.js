@@ -35,4 +35,4 @@ userSchema.pre("findByIdAndDelete", async function (next) {
     next();
 });
 
-export default mongoose.model(MODEL_TYPES.USER, userSchema);
+export default mongoose.models.user || mongoose.model(MODEL_TYPES.USER, userSchema);
