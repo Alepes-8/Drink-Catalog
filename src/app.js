@@ -41,6 +41,11 @@ if (process.env.NODE_ENV === "production") {
 
 console.log("📘 Swagger docs available at: http://localhost:5001/api-docs");
 
+// ----------------- Routes -----------------
+app.get("/", (req, res) => {
+  res.send("Drink API is running...");
+});
+
 app.use("/drink", routes);
 
 // ---------- Connect to DB & Start Server ----------
