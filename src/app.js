@@ -30,6 +30,8 @@ if (process.env.NODE_ENV === "production") {
         const protocol = req.headers["x-forwarded-proto"] || req.protocol;
         const host = req.headers["x-forwarded-host"] || req.get("host");
 
+        console.log(`swagger address ${protocol}://${host}/drink`)
+        
         return swaggerUi.setup({
             ...swaggerDocument,
             servers: [{ url: `${protocol}://${host}/drink` }]
