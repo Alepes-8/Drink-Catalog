@@ -27,8 +27,8 @@ import { swaggerUi, swaggerSpec } from "../swagger/swaggerConfig.js";
 
 if (process.env.NODE_ENV === "production") {
     app.use("/api-docs", swaggerUi.serve, (req, res, next) => {
-        const host = req.get("host");
-        const protocol = req.protocol;
+        const protocol = req.headers["x-forwarded-proto"] || req.protocol;
+        const host = req.headers["x-forwarded-host"] || req.get("host");
 
         return swaggerUi.setup({
             ...swaggerDocument,
@@ -42,6 +42,8 @@ if (process.env.NODE_ENV === "production") {
 console.log("📘 Swagger docs available at: http://localhost:5001/api-docs");
 
 // ----------------- Routes -----------------
+app.set("trust proxy", 1);
+
 app.get("/", (req, res) => {
   res.send("Drink API is running...");
 });
