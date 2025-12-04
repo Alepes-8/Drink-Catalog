@@ -10,12 +10,7 @@ const options = {
       title: "Drink Catalog API",
       version: "1.0.0",
       description: "API documentation for the Drink Catalog project",
-    },
-    servers: [
-      {
-        url: "http://localhost:5001", // change if deploying
-      },
-    ],
+    }
   },
   apis: ["./routes/*.js"], // Path to your route files with Swagger annotations
 };

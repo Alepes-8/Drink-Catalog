@@ -37,7 +37,7 @@ describe("Authentication Controller Tests (DI version)", () => {
         expect(res.body.message).toBe("User registered");
     });
 
-    /*it("should return token on valid login", async () => {
+    it("should return token on valid login", async () => {
         const roleId = new mongoose.Types.ObjectId();
         const userId = new mongoose.Types.ObjectId();
 
@@ -45,7 +45,7 @@ describe("Authentication Controller Tests (DI version)", () => {
         const mockRole = { _id: roleId, name: "normal" };
 
         mockingoose(User).toReturn(mockUser, "findOne");
-        mockingoose(UserRoles).toReturn(mockRole, "findById");
+        mockingoose(UserRoles).toReturn(mockRole, "findOne");
 
         jest.spyOn(bcrypt, "compare").mockResolvedValue(true);
         jest.spyOn(jwt, "sign").mockReturnValue("mock-jwt-token");
@@ -56,8 +56,7 @@ describe("Authentication Controller Tests (DI version)", () => {
 
         expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
         expect(res.body.token).toBe("mock-jwt-token");
-    });*/
-
+    });
 
     /* ---------------------------------------------------
      * POST /login INVALID CREDENTIALS
@@ -92,8 +91,6 @@ describe("Authentication Controller Tests (DI version)", () => {
      * --------------------------------------------------- */
     it("DELETE /deleteUser should delete current user", async () => {
         // Arrange
-        const mockUserId = new mongoose.Types.ObjectId();
-
         mockingoose(User).toReturn({}, "findByIdAndDelete");
 
         // Act

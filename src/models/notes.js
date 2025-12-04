@@ -7,4 +7,4 @@ const notesSchema = new mongoose.Schema({
     notes: {type: String, required: true, trim: true}
 });
 
-export default mongoose.model(MODEL_TYPES.NOTES, notesSchema);
+export default mongoose.models.notes || mongoose.model(MODEL_TYPES.NOTES, notesSchema);

@@ -7,4 +7,4 @@ const ratingsSchema = new mongoose.Schema({
     rating: {type: Number, min: 1, max: 10, required: true}
 });
 
-export default mongoose.model(MODEL_TYPES.RATINGS, ratingsSchema);
+export default mongoose.models.ratings || mongoose.model(MODEL_TYPES.RATINGS, ratingsSchema);
