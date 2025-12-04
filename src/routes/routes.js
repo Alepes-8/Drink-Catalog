@@ -13,7 +13,7 @@ router.delete("/deleteUserByID", auth, requiredRole("admin"), authenticationCont
 
 router.get("/health", recipeController.healthCheck)
 router.get("/searchByName", auth, recipeController.searchDrinksByName)
-router.get("/searchByIngredients", auth, recipeController.searchDrinksByIngredients)
+router.post("/searchByIngredients", auth, recipeController.searchDrinksByIngredients)
 router.get("/getDrinkById", auth, recipeController.getDrinkInformation)
 router.put("/updateDrinkNote", auth, recipeController.updateDrinkNote)
 router.put("/updateDrinkRating", auth, recipeController.updateDrinkRating)

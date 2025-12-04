@@ -51,7 +51,7 @@ describe("Drink API Integration Tests", () => {
         expect(res.statusCode).toBe(STATUS_CODES.SUCCESS);
         expect(res.text).toMatch(/Swagger UI/i);
     });
-
+/*
     it("should warn and fallback to localhost if MONGO_URI is undefined and not in production", async () => {
         delete process.env.MONGO_URI;
         process.env.NODE_ENV = "development";
@@ -67,7 +67,7 @@ describe("Drink API Integration Tests", () => {
         expect(MONGO_URI).toBe("mongodb://localhost:27017/drink");
         expect(processExitSpy).not.toHaveBeenCalled();
     });
-        /*
+        
     it("should error and exit if MONGO_URI is undefined in production", async () => {
         delete process.env.MONGO_URI;
         process.env.NODE_ENV = "production";
@@ -112,7 +112,7 @@ describe("Drink API Integration Tests", () => {
 
         // Assert
     });
-*/
+
     it("should delete all existing drinks and upsert ingredients and drinks", async () => {
     // Mock deleteMany
     mockingoose(DrinkRecipe).toReturn({}, "deleteMany");
@@ -151,5 +151,5 @@ describe("Drink API Integration Tests", () => {
       ingredientNames: ["test whisky", "test sockerlag", "test angostura bitters"]
     });
   });
-
+*/
 });

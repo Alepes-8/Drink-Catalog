@@ -32,8 +32,8 @@ export const login = async (req, res) => {
            return res.status(STATUS_CODES.INVALID_INPUT).json({ error: "Invalid credentials" });
         };
         
-        const userRole = await UserRoles.findById(user.role);
-
+        const userRole = await UserRoles.findOne({ _id: user.role});
+        
         // 2 create a JWT
         const token = jwt.sign(
             {                           //payload

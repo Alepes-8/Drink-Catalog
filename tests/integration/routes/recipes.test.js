@@ -81,7 +81,7 @@ describe("Drink API Integration Tests", () => {
 
         // Act
         const res = await request(app)
-            .get("/drink/searchByIngredients")
+            .post("/drink/searchByIngredients")
             .set("Authorization", `Bearer ${token}`)
             .send({ ingredients: ["vodka"] });
 

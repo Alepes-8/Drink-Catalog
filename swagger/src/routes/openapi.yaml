@@ -11,14 +11,227 @@ servers:
 paths:
   /health:
     get:
-      summary: Get the health status of the api
+      summary: Get the health status of the API
       tags: [Drink]
-      responses: 
-        '200': 
-          description: The api is running and can be called
+      responses:
+        '200':
+          description: API is running
+
+  /register:
+    post:
+      summary: Create a user account
+      tags: [User]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  example: test@test.com
+                password:
+                  type: string
+                  example: test123
+      responses:
+        '200':
+          description: Account created successfully
+
+  /login:
+    post:
+      summary: Login to an existing account
+      tags: [User]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  example: test@test.com
+                password:
+                  type: string
+                  example: test123
+      responses:
+        '200':
+          description: Login successful (returns JWT token)
+        '401':
+          description: Incorrect login parameters
+        '500':
+          description: Server issue
+
+  /deleteUser:
+    delete:
+      summary: Delete the logged-in user
+      tags: [User]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User successfully deleted
+
+  /deleteUserByID/{User_Id}:
+    delete:
+      summary: Admin deletes a user by ID
+      tags: [Admin Privileges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: User_Id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User is deleted
+
+  /getUserId/{Email}:
+    get:
+      summary: Admin: get UserId by email/username
+      tags: [Admin Privileges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Email
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found
+
+  /searchByName:
+    get:
+      summary: Search for a drink by name
+      tags: [Drink]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: drinkName
+          in: query
+          required: true
+          schema:
+            type: string
+            example: A1
+      responses:
+        '200':
+          description: Drinks returned
+
+  /searchByIngredients:
+    post:
+      summary: Search drinks by included/excluded ingredients
+      tags: [Drink]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: typeOfSearch
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [includeAll, exclude, includeAny]
+            example: includeAny
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ingredients]
+              properties:
+                ingredients:
+                  type: array
+                  items:
+                    type: string
+                  example: ["gin", "grenadine"]
+      responses:
+        '200':
+          description: Drinks returned based on ingredient filters
+
+  /getDrinkById:
+    get:
+      summary: Get all drink information for the logged-in user
+      tags: [Drink]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: drinkId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Drink details, notes, and rating returned
+
+  /updateDrinkNote:
+    put:
+      summary: Update user notes for a drink
+      tags: [Drink]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: drinkId
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [notes]
+              properties:
+                notes:
+                  type: string
+                  example: "nice whiskey flavor"
+      responses:
+        '200':
+          description: Note updated successfully
+
+  /updateDrinkRating:
+    put:
+      summary: Update user rating for a drink
+      tags: [Drink]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: drinkId
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rating]
+              properties:
+                rating:
+                  type: number
+                  enum: [1,2,3,4,5,6,7,8,8,10]
+                  example: 7
+      responses:
+        '200':
+          description: Rating updated successfully
 
 components:
   schemas:
     GenericObject:
       type: object
       additionalProperties: true
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer

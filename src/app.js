@@ -39,26 +39,29 @@ const swaggerPath = path.resolve(__dirname, "../swagger/src/routes/openapi.yaml"
 const swaggerDocument = YAML.load(swaggerPath);
 
 // Serve Swagger UI with a dynamic server URL
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  (req, res, next) => {
-    const host = req.get("host");
-    const protocol = req.protocol;
+if(process.env.NODE_ENV === "production"){
+    app.use(
+        "/api-docs",
+        swaggerUi.serve,
+        (req, res, next) => {
+            const host = req.get("host");
+            const protocol = req.protocol;
 
-    const dynamicSpec = {
-      ...swaggerDocument,
-      servers: [
-        {
-          url: `${protocol}://${host}/drink`,
-        },
-      ],
-    };
+            const dynamicSpec = {
+            ...swaggerDocument,
+            servers: [
+                {
+                url: `${protocol}://${host}/drink`,
+                },
+            ],
+            };
 
-    return swaggerUi.setup(dynamicSpec)(req, res, next);
-  }
-);
-
+            return swaggerUi.setup(dynamicSpec)(req, res, next);
+        }
+    );
+}else{
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
 
 console.log("📘 Swagger docs available at: http://localhost:5001/api-docs");
 

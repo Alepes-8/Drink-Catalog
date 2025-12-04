@@ -22,14 +22,17 @@ async function checkMongoAlive() {
 export const searchDrinksByName = async (req, res) => {
     try{
         // 1 get the input data from req.query and fix them for security
-        const nameToSearch = req.query.drinkName.toString().toLowerCase();
-
+        let nameToSearch;
+        if(req.query.drinkName){ 
+            nameToSearch = req.query.drinkName.toString().toLowerCase();
+        }else{
+            res.status(STATUS_CODES.INVALID_INPUT).json({message: "Missing drink name"})
+        }
         // 2 search the databbase based on the input name
         let result = await DrinkRecipe.find({name: { "$regex": nameToSearch, "$options": "i" }})            
             .populate("ingredients")
             .limit(50)
             .exec();  //TODO, verify that it returns results, event with partioal inputs.
-        
 
         // 3 return the resulting search
         res.status(STATUS_CODES.SUCCESS).json(result)
@@ -113,11 +116,11 @@ export const updateDrinkNote = async (req, res) => {
         const drinkId = req.query.drinkId.toString();
         const notes = req.body.notes.toString().toLowerCase();
         // 2 update the notes for the user to se on the drink
-        await Notes.findOneAndUpdate({
-            $and: [
-                {drinkID: drinkId},
-                {userId: req.user.id}
-        ]}, notes, {new: true});
+        await Notes.findOneAndUpdate(
+            { drinkID: drinkId, userId: req.user.id },
+            { notes },
+            { new: true, upsert: true }
+        );
 
         // 3 return status
         res.status(STATUS_CODES.UPDATE_SUCCESS).json({message: STATUS_MESSAGES.SUCCESS_NOTE_UPDATE})
@@ -133,16 +136,16 @@ export const updateDrinkRating = async (req, res) => {
         const rating = Number(req.body.rating);
 
         if(rating <1 || rating > 10){
-            res.status(STATUS_CODES.SUCCESS).json({message: STATUS_MESSAGES.SUCCESS_RATING_UPDATE});
+            res.status(STATUS_CODES.INVALID_INPUT).json({message: STATUS_MESSAGES.UNSUCCESSFUL_RATING_UPDATE});
             return;
         }
 
         // 2 update the notes for the user to se on the drink
-        await Ratings.findOneAndUpdate({
-            $and: [
-                {drinkID: drinkId}, 
-                {userId: req.user.id}
-        ]}, rating, {new: true});
+        await Ratings.findOneAndUpdate(
+            { drinkID: drinkId, userId: req.user.id },
+            { rating },
+            { new: true, upsert: true }
+        );
 
         // 3 return status
         res.status(STATUS_CODES.UPDATE_SUCCESS).json({message: STATUS_MESSAGES.SUCCESS_RATING_UPDATE})

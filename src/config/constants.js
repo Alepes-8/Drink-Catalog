@@ -20,5 +20,7 @@ export const MODEL_TYPES = {
 export const STATUS_MESSAGES = {
   SUCCESS_NOTE_UPDATE: "Notes for the recipe has been updated",
   SUCCESS_RATING_UPDATE: "Ratings for the recipe has been updated",
+  UNSUCCESSFUL_RATING_UPDATE: "Ratings for the recipe has stopped, rating is between 1-10",
+
 }
 
