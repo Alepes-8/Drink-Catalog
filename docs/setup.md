@@ -20,6 +20,10 @@ Running the API through Docker offers a more controlled and consistent environme
 Lastly, the system supports deployment to external API hosts. This provides easy access for external users and ensures the API is always online. However, exposing an API publicly introduces security considerations and additional setup steps.
 
 ---
+## Step 1 before anything else, Env setup
+
+Run the "create-env.bat" file to get a general .env file
+
 
 ## Local Setup
 
